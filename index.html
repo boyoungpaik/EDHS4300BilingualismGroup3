@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Has Bilingualism Become Obsolete? (Copy)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Layout idea: a two-column "parallel text" page. Human meaning in teal, machine output in amber, like a bilingual edition. */
+  --paper: #f6f8f8;
+  --surface: #ffffff;
+  --ink: #16242a;
+  --muted: #55676e;
+  --line: #d6e0e2;
+  --human: #0d6b6b;
+  --human-soft: #e2f1f0;
+  --machine: #9a5b0b;
+  --machine-soft: #fbf0dd;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --ui: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f1719; --surface: #162226; --ink: #e5eeef; --muted: #9bb0b5; --line: #2a3a3f;
+    --human: #5cc8c2; --human-soft: #15302f; --machine: #f0b35a; --machine-soft: #33270f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0f1719; --surface: #162226; --ink: #e5eeef; --muted: #9bb0b5; --line: #2a3a3f;
+  --human: #5cc8c2; --human-soft: #15302f; --machine: #f0b35a; --machine-soft: #33270f;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 1.08rem; line-height: 1.65; }
+a { color: var(--human); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--machine); outline-offset: 2px; border-radius: 4px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.15; text-wrap: balance; margin: 0; }
+img { max-width: 100%; }
+
+/* Header */
+.masthead { border-bottom: 1px solid var(--line); background: var(--surface); }
+.masthead-inner { max-width: 1180px; margin: 0 auto; padding: 48px 24px 40px; display: grid; gap: 18px; }
+.course { font-family: var(--ui); font-size: .85rem; letter-spacing: .04em; color: var(--muted); }
+.masthead h1 { font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 800; letter-spacing: -.02em; max-width: 18ch; }
+.masthead h1 .mt { color: var(--machine); }
+.masthead h1 .hu { color: var(--human); }
+.lede { max-width: 62ch; font-size: 1.18rem; color: var(--ink); margin: 0; }
+.members { font-family: var(--ui); font-size: .92rem; color: var(--muted); margin: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; font-family: var(--ui); font-size: .85rem; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-weight: 600; }
+.chip.human { background: var(--human-soft); color: var(--human); }
+.chip.machine { background: var(--machine-soft); color: var(--machine); }
+
+/* Layout */
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: 1fr; gap: 40px; }
+@media (min-width: 960px) { .wrap { grid-template-columns: 240px 1fr; } }
+nav.toc { padding-top: 32px; font-family: var(--ui); }
+@media (min-width: 960px) { nav.toc { position: sticky; top: 0; align-self: start; max-height: 100vh; overflow-y: auto; padding-bottom: 32px; } }
+.toc h2 { font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.toc a { display: grid; grid-template-columns: 2.2em 1fr; padding: 6px 8px; border-radius: 6px; color: var(--ink); text-decoration: none; font-size: .95rem; line-height: 1.3; }
+.toc a span { color: var(--muted); font-variant-numeric: tabular-nums; }
+.toc a:hover { background: var(--human-soft); }
+main { padding: 32px 0 64px; min-width: 0; }
+
+section.topic { padding: 40px 0; border-top: 1px solid var(--line); }
+section.topic:first-of-type { border-top: 0; padding-top: 0; }
+.topic-head { display: grid; gap: 8px; margin-bottom: 18px; }
+.num { font-family: var(--ui); font-weight: 700; color: var(--human); font-variant-numeric: tabular-nums; font-size: .95rem; }
+.topic h2 { font-size: clamp(1.6rem, 3.2vw, 2.25rem); font-weight: 700; letter-spacing: -.01em; }
+.byline { font-family: var(--ui); font-size: .85rem; color: var(--muted); }
+.prose { max-width: 66ch; }
+.prose p { margin: 0 0 1em; }
+h3 { font-size: 1.2rem; margin: 1.6em 0 .5em; }
+
+.takeaway { margin-top: 20px; max-width: 66ch; padding: 14px 18px; border-left: 4px solid var(--human); background: var(--human-soft); border-radius: 0 8px 8px 0; }
+.takeaway strong { font-family: var(--ui); display: block; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--human); margin-bottom: 2px; }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin: 20px 0; max-width: 820px; }
+.card-title { font-family: var(--ui); font-weight: 700; font-size: 1rem; margin: 0 0 4px; }
+.card-note { font-family: var(--ui); font-size: .85rem; color: var(--muted); margin: 0 0 14px; }
+
+/* Buttons and tabs */
+.btnrow { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.btn { font-family: var(--ui); font-size: .92rem; font-weight: 600; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer; }
+.btn:hover { border-color: var(--human); }
+.btn[aria-pressed="true"], .btn[aria-selected="true"] { background: var(--human); border-color: var(--human); color: var(--surface); }
+
+/* Translation demo */
+.pairs { display: grid; gap: 10px; }
+.pair { display: grid; grid-template-columns: 9.5em 1fr; gap: 12px; align-items: baseline; padding: 10px 12px; border-radius: 8px; }
+.pair .lab { font-family: var(--ui); font-size: .78rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+.pair.typed { background: var(--paper); }
+.pair.meant { background: var(--human-soft); }
+.pair.meant .lab { color: var(--human); }
+.pair.out { background: var(--machine-soft); }
+.pair.out .lab { color: var(--machine); }
+.why { margin: 12px 0 0; font-size: 1rem; }
+@media (max-width: 520px) { .pair { grid-template-columns: 1fr; gap: 2px; } }
+
+/* Stress demo */
+.sentence { display: flex; flex-wrap: wrap; gap: 6px; font-family: var(--display); font-size: 1.5rem; margin-bottom: 14px; }
+.word { font: inherit; border: 0; background: transparent; color: var(--ink); padding: 2px 6px; border-radius: 6px; cursor: pointer; border-bottom: 2px dashed var(--line); }
+.word:hover { background: var(--human-soft); }
+.word[aria-pressed="true"] { color: var(--human); background: var(--human-soft); text-transform: uppercase; border-bottom-color: var(--human); }
+.result { padding: 12px 14px; border-radius: 8px; background: var(--paper); min-height: 3.2em; }
+.stress-media { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+.stress-media .result { flex: 1 1 220px; }
+.stress-video { width: 200px; max-width: 100%; aspect-ratio: 9 / 16; border-radius: 10px; background: var(--ink); }
+.stress-video[hidden] { display: none; }
+.video-link { display: flex; align-items: center; gap: 16px; max-width: 820px; margin: 20px 0; padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--human); border-radius: 12px; color: var(--ink); text-decoration: none; font-family: var(--ui); }
+.video-link:hover { border-color: var(--human); background: var(--human-soft); }
+.video-link .play { flex: none; width: 48px; height: 48px; border-radius: 50%; background: var(--human); display: grid; place-items: center; }
+.video-link .vl-kicker { display: block; font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--human); }
+.video-link .vl-title { display: block; font-size: 1.1rem; font-weight: 700; line-height: 1.3; }
+.video-link .vl-desc { display: block; font-size: .92rem; color: var(--muted); margin-top: 2px; }
+.video-link .vl-go { display: block; font-size: .85rem; font-weight: 600; color: var(--human); margin-top: 6px; }
+@media (max-width: 520px) { .stress-media { justify-content: center; } }
+
+/* Gesture demo */
+.gesture { display: grid; grid-template-columns: 140px 1fr; gap: 20px; align-items: center; }
+@media (max-width: 520px) { .gesture { grid-template-columns: 1fr; justify-items: center; text-align: center; } }
+.head { width: 120px; height: 120px; }
+.head.nod { animation: nod 1s ease-in-out infinite; }
+.head.shake { animation: shake 1s ease-in-out infinite; }
+@keyframes nod { 0%,100% { transform: translateY(0) rotate(0); } 25% { transform: translateY(6px) rotate(0); } 75% { transform: translateY(-4px); } }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-9px); } 75% { transform: translateX(9px); } }
+.gesture-out { font-family: var(--ui); }
+.gesture-out .big { font-family: var(--display); font-size: 1.6rem; font-weight: 700; }
+
+/* Coverage bar */
+.coverage { display: grid; gap: 10px; }
+.bar { height: 28px; border-radius: 6px; background: var(--paper); border: 1px solid var(--line); overflow: hidden; }
+.bar > div { height: 100%; background: var(--machine); }
+.bar-labels { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-family: var(--ui); font-size: .9rem; font-variant-numeric: tabular-nums; }
+.stat { font-family: var(--display); font-size: 2.2rem; font-weight: 800; line-height: 1; }
+
+/* Compare columns */
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 820px; margin: 20px 0; }
+@media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
+.col { border-radius: 12px; padding: 16px 18px; border: 1px solid var(--line); background: var(--surface); }
+.col h3 { margin: 0 0 8px; font-size: 1.05rem; }
+.col.h { border-top: 4px solid var(--human); }
+.col.m { border-top: 4px solid var(--machine); }
+.col ul { margin: 0; padding-left: 1.1em; }
+.col li { margin-bottom: .4em; }
+
+.media-slot { max-width: 820px; margin: 20px 0; padding: 18px; border: 2px dashed var(--line); border-radius: 12px; font-family: var(--ui); font-size: .92rem; color: var(--muted); }
+.media-slot strong { color: var(--ink); }
+
+blockquote { margin: 18px 0; padding: 4px 0 4px 18px; border-left: 3px solid var(--machine); font-style: italic; max-width: 60ch; }
+
+.verdict { background: var(--ink); color: var(--paper); border-radius: 14px; padding: 26px; max-width: 820px; margin-top: 24px; }
+.verdict h3 { margin: 0 0 8px; font-size: 1.4rem; color: var(--paper); }
+.verdict p { margin: 0; }
+
+/* References */
+.refs { font-size: .98rem; }
+.refs ol { padding-left: 0; list-style: none; display: grid; gap: 10px; max-width: 75ch; }
+.refs li { padding-left: 2em; text-indent: -2em; overflow-wrap: anywhere; }
+.ai-note { max-width: 75ch; padding: 14px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; font-size: .98rem; }
+footer { border-top: 1px solid var(--line); padding: 24px; text-align: center; font-family: var(--ui); font-size: .85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="course">EDHS 4300 · Psycholinguistics and Communication · Group 3 · Fall 2026</div>
+    <h1>Has bilingualism become obsolete because of <span class="mt">machine translation</span>?</h1>
+    <p class="lede">Translation apps are free, fast and on almost every phone. This site looks at what they do well, where they still fall short, and why we think knowing a second language matters as much as ever.</p>
+    <p class="members">Sanjay Lakshmanan · Hannah Kim · Bo Paik · Tammy Yen · Harrison Stone · Sophia Lee · Louisa Mulligan</p>
+    <div class="legend" aria-label="Color key">
+      <span class="chip human">● What a person means</span>
+      <span class="chip machine">● What a machine produces</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Sections">
+    <h2>Sections</h2>
+    <ol>
+      <li><a href="#meanings"><span>01</span>Words with more than one meaning</a></li>
+      <li><a href="#tone"><span>02</span>Tone and body language</a></li>
+      <li><a href="#dialects"><span>03</span>Dialects and training data</a></li>
+      <li><a href="#medical"><span>04</span>Medical and travel situations</a></li>
+      <li><a href="#asl"><span>05</span>Sign language and accessibility</a></li>
+      <li><a href="#identity"><span>06</span>Language and identity</a></li>
+      <li><a href="#debate"><span>07</span>Arguments for and against</a></li>
+      <li><a href="#references"><span>—</span>References</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <!-- 1 -->
+    <section class="topic" id="meanings">
+      <div class="topic-head">
+        <div class="num">01</div>
+        <h2>Words with more than one meaning</h2>
+        <div class="byline">Section lead: Sanjay Lakshmanan</div>
+      </div>
+      <div class="prose">
+        <p>Many words carry several meanings. In Spanish, <em>seguro</em> can mean "safe," "sure" or "insurance." <em>Banco</em> can be a bank or a bench. <em>Esposas</em> can be wives or handcuffs.</p>
+        <p>People figure out the right meaning almost instantly because they know the situation, the speaker and what was said a moment ago. A translation app only has the words on the screen, so it has to guess from the words around them. Modern apps look at whole sentences, which helps a lot, but mistakes still happen when a phrase is short or the context is missing.</p>
+        <p>Idioms and slang are even harder. A literal translation of "break a leg" sounds like a threat, and "no cap" has nothing to do with hats.</p>
+      </div>
+
+      <div class="card" id="demo">
+        <p class="card-title">Translation fail demo</p>
+        <p class="card-note">Pick an example to compare what was typed, what the speaker meant, and a word-for-word translation.</p>
+        <div class="btnrow" role="tablist" aria-label="Examples">
+          <button class="btn" role="tab" id="ex-banco" aria-selected="true" data-ex="banco">banco</button>
+          <button class="btn" role="tab" id="ex-esposas" aria-selected="false" data-ex="esposas">esposas</button>
+          <button class="btn" role="tab" id="ex-seguro" aria-selected="false" data-ex="seguro">seguro</button>
+          <button class="btn" role="tab" id="ex-leg" aria-selected="false" data-ex="leg">break a leg</button>
+          <button class="btn" role="tab" id="ex-cap" aria-selected="false" data-ex="cap">no cap</button>
+        </div>
+        <div class="pairs" role="tabpanel" aria-live="polite">
+          <div class="pair typed"><span class="lab">Typed</span><span id="d-typed"></span></div>
+          <div class="pair meant"><span class="lab">Meant</span><span id="d-meant"></span></div>
+          <div class="pair out"><span class="lab">Word for word</span><span id="d-out"></span></div>
+        </div>
+        <p class="why" id="d-why"></p>
+      </div>
+
+      <div class="takeaway"><strong>Takeaway</strong>Translation apps keep improving, but people are still more reliable at understanding double meanings, idioms and slang.</div>
+    </section>
+
+    <!-- 2 -->
+    <section class="topic" id="tone">
+      <div class="topic-head">
+        <div class="num">02</div>
+        <h2>Tone and body language</h2>
+        <div class="byline">Section lead: Hannah Kim</div>
+      </div>
+      <div class="prose">
+        <p>Machine translation has two big blind spots. It has trouble with tone, pitch and emotion, and it has trouble reading body language in its cultural context.</p>
+        <h3>Tone changes meaning</h3>
+        <p>Take the sentence "I'm fine." Said warmly, it means things really are fine. Said sarcastically or hesitantly, it can mean the opposite. A machine translates the words literally, so the underlying meaning disappears.</p>
+      </div>
+
+      <div class="card">
+        <p class="card-title">Same words, different meaning</p>
+        <p class="card-note">Choose a tone. The machine output never changes.</p>
+        <div class="btnrow" id="tones">
+          <button class="btn" aria-pressed="true" data-tone="0">Warm</button>
+          <button class="btn" aria-pressed="false" data-tone="1">Sarcastic</button>
+          <button class="btn" aria-pressed="false" data-tone="2">Hesitant</button>
+        </div>
+        <div class="pairs">
+          <div class="pair typed"><span class="lab">Said</span><span>"I'm fine."</span></div>
+          <div class="pair meant"><span class="lab">Meant</span><span id="tone-meant" aria-live="polite"></span></div>
+          <div class="pair out"><span class="lab">Spanish output</span><span>"Estoy bien."</span></div>
+        </div>
+      </div>
+
+      <div class="prose">
+        <p>Word stress works the same way. In "She didn't take your money," stressing a different word changes what the speaker is implying. Stressing "she" suggests someone else took it. Text-based translation drops that extra layer of meaning.</p>
+      </div>
+
+      <div class="card">
+        <p class="card-title">Word stress demo</p>
+        <p class="card-note">Tap a word to hear the sentence with that word stressed.</p>
+        <div class="sentence" id="stress">
+          <button class="word" aria-pressed="false" data-i="0">She</button>
+          <button class="word" aria-pressed="false" data-i="1">didn't</button>
+          <button class="word" aria-pressed="false" data-i="2">take</button>
+          <button class="word" aria-pressed="false" data-i="3">your</button>
+          <button class="word" aria-pressed="false" data-i="4">money</button>
+        </div>
+        <div class="stress-media">
+          <video id="stress-video" class="stress-video" controls playsinline preload="metadata" hidden aria-label="A group member saying the sentence with stress on the selected word"></video>
+          <div class="result" id="stress-out" aria-live="polite">Tap a word to see what the speaker is implying.</div>
+        </div>
+      </div>
+
+      <div class="prose">
+        <h3>Gestures depend on culture</h3>
+        <p>Head movements look universal, but they aren't. In the United States, nodding up and down means "yes" and shaking side to side means "no." In Bulgaria, the meanings are reversed. Even with advanced computer vision, a translation system could misread these gestures unless it accounts for cultural context.</p>
+      </div>
+
+      <div class="card">
+        <p class="card-title">What does this head movement mean?</p>
+        <div class="btnrow" id="gesture-btns">
+          <button class="btn" aria-pressed="true" data-g="nod">Nod</button>
+          <button class="btn" aria-pressed="false" data-g="shake">Shake</button>
+        </div>
+        <div class="gesture">
+          <svg class="head nod" id="head" viewBox="0 0 120 120" role="img" aria-label="A simple face moving its head">
+            <circle cx="60" cy="58" r="40" fill="var(--human-soft)" stroke="var(--human)" stroke-width="3"/>
+            <circle cx="46" cy="52" r="4" fill="var(--ink)"/>
+            <circle cx="74" cy="52" r="4" fill="var(--ink)"/>
+            <path d="M46 72 Q60 80 74 72" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <div class="gesture-out" aria-live="polite">
+            <div>In the United States: <span class="big" id="g-us">Yes</span></div>
+            <div>In Bulgaria: <span class="big" id="g-bg" style="color: var(--machine)">No</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="takeaway"><strong>Takeaway</strong>Translation takes more than recognizing words and gestures. It takes social and cultural context.</div>
+    </section>
+
+    <!-- 3 -->
+    <section class="topic" id="dialects">
+      <div class="topic-head">
+        <div class="num">03</div>
+        <h2>Dialects and training data</h2>
+        <div class="byline">Section lead: Bo Paik</div>
+      </div>
+      <div class="prose">
+        <p>This section looks at how translation apps learn languages, and why that process leaves some speakers behind.</p>
+        <h3>Apps learn "standard" language</h3>
+        <p>Machine translators like Google Translate learn from large collections of parallel text that humans have already translated. Most of that material reflects the "standard" variety of a language. As a result, apps may not be tuned to the vocabulary, grammar and pragmatics that differ from one dialect to another. Spanish in Spain, Mexico and the Caribbean differs in vocabulary, idioms and sometimes grammar, and a word that is ordinary in one country can sound awkward or even offensive in another.</p>
+        <h3>Apps depend on bilingual people</h3>
+        <p>Translation apps can't replace bilingual knowledge because they are built from it. Bilingual people produce the translated texts the systems learn from, and bilingual evaluators judge whether the output is accurate. An app's accuracy and biases come from its training data.</p>
+        <p>This matters because language keeps changing. New words come in, old ones fade, and meanings shift. An app can only stay current if it keeps learning from people who use both languages in real life. If bilingual speakers disappeared, translations would slowly drift away from how people actually talk, with nobody left to catch the mistakes.</p>
+        <h3>Machine translation and linguistic hierarchy</h3>
+        <p>Many minority languages are poorly represented in training data because they have fewer speakers and less presence in media, so translation is less reliable for them. This is an equity issue. Whose dialects and languages are prioritized in training data decides which communities get good translations and which get poor ones, or none at all.</p>
+      </div>
+
+      <div class="card coverage">
+        <p class="card-title">How much of the world's linguistic diversity does Google Translate cover?</p>
+        <div class="bar-labels">
+          <div><div class="stat" style="color: var(--machine)">249</div>languages and varieties in Google Translate</div>
+          <div style="text-align:right"><div class="stat">7,164</div>languages in use worldwide (Ethnologue)</div>
+        </div>
+        <div class="bar" role="img" aria-label="249 out of 7,164 is about 3.5 percent"><div style="width: 3.5%"></div></div>
+        <p class="card-note" style="margin:0">That's about 3.5%. Because Google's count includes varieties of the same language, the share of distinct languages is even smaller.</p>
+      </div>
+
+      <div class="prose">
+        <p>For minority language communities, bilingual speakers are what keep the language alive.</p>
+      </div>
+      <div class="takeaway"><strong>Takeaway</strong>Machine translation can help with basic travel needs, but it is built from bilingual knowledge and can't make bilingualism obsolete.</div>
+    </section>
+
+    <!-- 4 -->
+    <section class="topic" id="medical">
+      <div class="topic-head">
+        <div class="num">04</div>
+        <h2>Medical and travel situations</h2>
+        <div class="byline">Section lead: Harrison Stone</div>
+      </div>
+      <div class="prose">
+        <p>Machine translation falls short in exactly the situations where accuracy and human understanding matter most.</p>
+        <h3>Traveling</h3>
+        <p>Passing a phone back and forth is slow and breaks up the conversation. That becomes a real problem when time is short, like negotiating with a taxi driver, rebooking a missed flight or asking for directions in a hurry. Noisy streets, weak signals and dead batteries also make apps unreliable. Speaking even a little of the local language builds a kind of trust that a screen can't.</p>
+        <h3>Hospitals and courts</h3>
+        <p>In medical and legal settings the stakes are much higher. A mistranslated allergy, medication dose or consent form can cause real harm, which is why hospitals and courts use certified interpreters instead of consumer apps.</p>
+      </div>
+
+      <div class="card">
+        <p class="card-title">A real example from an emergency department</p>
+        <p class="card-note">From a 2019 UCSF study of Google Translate and emergency discharge instructions (Khoong et al., 2019)</p>
+        <div class="pairs">
+          <div class="pair typed"><span class="lab">Doctor wrote</span><span>"Hold the kidney medicine."</span></div>
+          <div class="pair meant"><span class="lab">Meant</span><span>Stop taking it for now.</span></div>
+          <div class="pair out"><span class="lab">Translation</span><span>Spanish: "keep the medication." Chinese: "keep taking" the medication.</span></div>
+        </div>
+        <p class="why">The researchers rated this error as potentially life-threatening. Overall, Google Translate was 92% accurate for Spanish and 81% for Chinese. That's better than many clinicians expected, but a few errors still had the potential to cause serious harm.</p>
+      </div>
+
+      <div class="prose">
+        <p>Courts have run into the same problem. In one US case, a police officer used Google Translate to ask a Spanish-speaking driver for permission to search her car, and the court found the app wasn't reliable enough to show that she had really consented (Ramirez, 2024).</p>
+        <h3>When the patient can't use the app</h3>
+        <p>Even a perfect app is of little use to someone who has had a stroke or an injury. A patient who is in pain, confused, or unable to speak clearly or use their hands can't operate it, and emergencies leave no time to type, wait and re-check. A bilingual doctor, nurse or interpreter can talk with that patient directly. Human interpreters also adapt to the person. They adjust for accents and slang, notice confusion or fear, and rephrase to make sure they were understood.</p>
+      </div>
+      <div class="takeaway"><strong>Takeaway</strong>In high-stakes settings, machine translation works best as a supplement to bilingual professionals, not a replacement.</div>
+    </section>
+
+    <!-- 5 -->
+    <section class="topic" id="asl">
+      <div class="topic-head">
+        <div class="num">05</div>
+        <h2>Sign language and bilingual accessibility</h2>
+        <div class="byline">Section lead: Tammy Yen</div>
+      </div>
+      <div class="prose">
+        <p>Bilingualism isn't limited to spoken languages. Someone who uses both American Sign Language (ASL) and English is bilingual. ASL is an independent language with its own grammar and sentence structure. Instead of sound, it uses handshape, movement, facial expression and physical space to carry meaning.</p>
+        <p>Facial expressions in ASL are part of the grammar. For example, raised eyebrows mark a yes/no question, and lowered, furrowed eyebrows mark a "wh-" question like who, what or where. An ASL translation app would have to do much more than recognize hand signs.</p>
+      </div>
+
+      <div class="compare">
+        <div class="col h">
+          <h3>Talking directly in ASL</h3>
+          <ul>
+            <li>Both people simply look at each other and sign</li>
+            <li>Facial grammar and space are understood naturally</li>
+            <li>No device, signal or battery needed</li>
+            <li>Communication is direct and independent</li>
+          </ul>
+        </div>
+        <div class="col m">
+          <h3>AI-assisted translation</h3>
+          <ul>
+            <li>A camera must continuously capture hands, face and body</li>
+            <li>Everything has to be interpreted together in real time</li>
+            <li>Both people position themselves around a screen</li>
+            <li>Could help close gaps where no interpreter is available</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="prose">
+        <p>AI could improve accessibility. But even if it someday translates ASL accurately in real time, relying on cameras and screens would make everyday conversation less natural than signing with someone who knows ASL. English captions also aren't always an equal substitute for ASL interpretation, especially for people whose primary language is ASL.</p>
+      </div>
+
+      <a class="video-link" href="https://www.youtube.com/watch?v=f_nVhrOgpYw" target="_blank" rel="noopener noreferrer">
+        <span class="play" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M6 3.5v13l11-6.5z" fill="var(--surface)"/></svg></span>
+        <span>
+          <span class="vl-kicker">Video</span>
+          <span class="vl-title">What does an ASL conversation look like?</span>
+          <span class="vl-desc">This video depicts how a conversation are had in ASL</span>
+          <span class="vl-go">Watch on YouTube (opens in a new tab) →</span>
+        </span>
+      </a>
+
+      <div class="takeaway"><strong>Takeaway</strong>Learning ASL lets people communicate directly, without depending on technology. Bilingualism is also a way to make communication more accessible and inclusive.</div>
+    </section>
+
+    <!-- 6 -->
+    <section class="topic" id="identity">
+      <div class="topic-head">
+        <div class="num">06</div>
+        <h2>Language and identity</h2>
+        <div class="byline">Section lead: Sophia Lee</div>
+      </div>
+      <div class="prose">
+        <p>Language isn't just a way to communicate. It's tied to culture, to meaning, and to who we are. Tools for crossing language barriers have come a long way, from the printing press to Google Translate to ChatGPT, and today word-for-word translation is nearly instant. When we visit a country where we don't speak the language, we're no longer completely lost.</p>
+        <p>Whether that makes bilingualism obsolete raises bigger questions. Why does learning a language matter? What does it say about your identity? And why should we keep bilingualism alive?</p>
+        <h3>Different languages, different selves</h3>
+        <p>Many bilingual people say they don't feel like exactly the same person in each language. A language comes with its own jokes, expressions and ways of showing affection that don't carry over well. A thought that feels natural in Mandarin or Korean can sound strange, or less like yourself, when translated directly into English. An app might translate what you say to your family accurately enough, but putting a phone between you changes the conversation.</p>
+        <p>Bilingual speakers also create things machines can't. Korean American speakers often code-mix Korean and English ("Konglish"), switching to whichever language best captures a feeling or idea. They use it differently with parents than with friends, and the surprise of an unexpected mixed phrase is often part of the humor. A translator built to convert language A into language B has no way to produce this kind of mixing.</p>
+      </div>
+      <blockquote>"Afrikaans is the language of my heart."<br><span style="font-style:normal; font-family: var(--ui); font-size:.85rem; color: var(--muted)">Research participant quoted in Maurice (2026)</span></blockquote>
+      <div class="takeaway"><strong>Takeaway</strong>Machine translation can carry your words, but it can't carry who you are when you speak them.</div>
+    </section>
+
+    <!-- 7 -->
+    <section class="topic" id="debate">
+      <div class="topic-head">
+        <div class="num">07</div>
+        <h2>Arguments for and against bilingualism becoming obsolete</h2>
+        <div class="byline">Section lead: Louisa Mulligan</div>
+      </div>
+      <div class="prose">
+        <p>This section brings the ideas from the other sections together and weighs both sides.</p>
+      </div>
+
+      <div class="compare">
+        <div class="col m">
+          <h3>Arguments for "obsolete"</h3>
+          <ul>
+            <li>Translation apps are free, fast and on almost every phone</li>
+            <li>AI keeps making them more accurate</li>
+            <li>For everyday tasks like reading a menu or asking for directions, many people may never need a second language</li>
+            <li>Humans have always handed mental work to tools, like writing and calculators (Maurice, 2026)</li>
+            <li>Demand for human translators is falling. In one survey of European translators, 79% saw AI as a threat to their jobs (Oltermann, 2026)</li>
+          </ul>
+        </div>
+        <div class="col h">
+          <h3>Arguments against</h3>
+          <ul>
+            <li>Apps still struggle with double meanings, idioms, tone and cultural context (Sections 1–2)</li>
+            <li>They are trained mostly on "standard" languages and leave minority languages behind (Section 3)</li>
+            <li>They can be unreliable in medical, legal and emergency situations (Section 4)</li>
+            <li>They can't replace direct communication in ASL (Section 5)</li>
+            <li>They can't replace the identity and connection that come from speaking someone's language (Section 6)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="prose">
+        <p>Language researchers writing in <em>The Conversation</em> make a similar point. AI is good at the literal side of language but misses social meaning, humor and register, especially in less-represented languages. It can support language learning by personalizing practice and giving feedback, but it can't do the cognitive and cultural work of learning a language for you (Maurice, 2026).</p>
+      </div>
+
+      <div class="verdict">
+        <h3>Our conclusion</h3>
+        <p>Machine translation is a useful tool, and it may make a second language less <em>necessary</em> for quick, everyday tasks. It doesn't make bilingualism less <em>valuable</em>. Translation supports bilingualism rather than replacing it, and translation systems themselves depend on bilingual people to exist and stay accurate.</p>
+      </div>
+    </section>
+
+    <!-- References -->
+    <section class="topic refs" id="references">
+      <div class="topic-head">
+        <h2>References</h2>
+      </div>
+      <ol>
+        <li>Ethnologue. (2026). <em>How many languages are there in the world?</em> SIL Global. <a href="https://www.ethnologue.com/insights/how-many-languages/">https://www.ethnologue.com/insights/how-many-languages/</a></li>
+        <li>Google. (2026). <em>Google Translate</em> [Mobile app]. App Store. <a href="https://apps.apple.com/us/app/google-translate/id414706506">https://apps.apple.com/us/app/google-translate/id414706506</a></li>
+        <li>Khoong, E. C., Steinbrook, E., Brown, C., &amp; Fernandez, A. (2019). Assessing the use of Google Translate for Spanish and Chinese translations of emergency department discharge instructions. <em>JAMA Internal Medicine, 179</em>(4), 580–582. <a href="https://doi.org/10.1001/jamainternmed.2018.7653">https://doi.org/10.1001/jamainternmed.2018.7653</a></li>
+        <li>Maurice, O. (2026, May 14). If AI can translate instantly, why learn another language? <em>The Conversation</em>. <a href="https://theconversation.com/if-ai-can-translate-instantly-why-learn-another-language-280310">https://theconversation.com/if-ai-can-translate-instantly-why-learn-another-language-280310</a></li>
+        <li>Oltermann, P. (2026, May 8). 'Being human helps': Despite rise of AI is there still hope for Europe's translators? <em>The Guardian</em>. <a href="https://www.theguardian.com/technology/2026/may/08/being-human-helps-despite-rise-of-ai-is-there-still-hope-for-europes-translators">https://www.theguardian.com/technology/2026/may/08/being-human-helps-despite-rise-of-ai-is-there-still-hope-for-europes-translators</a></li>
+        <li>Radio Bulgaria. (2024, December 2). <em>7 Bulgarian idiosyncrasies that are puzzling to foreigners</em>. Bulgarian National Radio. <a href="https://bnr.bg/en/post/101645013/7-bulgarian-idiosyncrasies-that-are-puzzling-to-foreigners">https://bnr.bg/en/post/101645013/7-bulgarian-idiosyncrasies-that-are-puzzling-to-foreigners</a></li>
+        <li>Ramirez, E. (2024, October 22). With AI translation tools so powerful, what is the point of learning a language? <em>The Conversation</em>. <a href="https://theconversation.com/with-ai-translation-tools-so-powerful-what-is-the-point-of-learning-a-language-238068">https://theconversation.com/with-ai-translation-tools-so-powerful-what-is-the-point-of-learning-a-language-238068</a></li>
+        <li>University of California San Francisco. (2019, February 25). <em>Google translates doctor's orders into Spanish and Chinese with few significant errors</em>. <a href="https://www.ucsf.edu/news/2019/02/413376/google-translates-doctors-orders-spanish-and-chinese-few-significant-errors">https://www.ucsf.edu/news/2019/02/413376/google-translates-doctors-orders-spanish-and-chinese-few-significant-errors</a></li>
+        <li>Vicars, W. (n.d.). <em>Common ASL sentence types</em>. Lifeprint. <a href="https://www.lifeprint.com/asl101/topics/sentencetypes.htm">https://www.lifeprint.com/asl101/topics/sentencetypes.htm</a></li>
+      </ol>
+      <div class="ai-note">
+        <strong style="font-family: var(--ui)">AI use statement.</strong> Following the course AI policy, we acknowledge that we used Claude (Anthropic, 2026) to help build and format this website from our group's submitted website plan and discussion posts. Group members reviewed and edited the content for accuracy.<br>
+        Anthropic. (2026). <em>Claude</em> (Opus 5.5) [Large language model]. <a href="https://claude.ai">https://claude.ai</a>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>EDHS 4300 · Group 3 · University of Virginia · Fall 2026</footer>
+
+<script>
+(function () {
+  // 1. Translation fail demo
+  var ex = {
+    banco:   { typed: "Me senté en el banco.", meant: "I sat on the bench. (We were at the park.)", out: "I sat in the bank.", why: "Banco means both \"bank\" and \"bench.\" Without the surrounding situation, a machine has to guess." },
+    esposas: { typed: "Las esposas estaban sobre la mesa.", meant: "The handcuffs were on the table. (Said by a police officer.)", out: "The wives were on the table.", why: "Esposas means both \"wives\" and \"handcuffs.\" A listener knows from context which one fits." },
+    seguro:  { typed: "¿Seguro?", meant: "Are you sure?", out: "Safe? / Sure? / Insurance?", why: "A one-word message gives the app almost no context to choose between seguro's meanings." },
+    leg:     { typed: "Break a leg tonight!", meant: "Good luck tonight! (Before a performance.)", out: "¡Rómpete una pierna esta noche!", why: "Idioms don't mean what their words say. A Spanish speaker would say \"¡Mucha suerte!\" instead." },
+    cap:     { typed: "That was the best concert ever, no cap.", meant: "Honestly, that was the best concert ever.", out: "That was the best concert ever, without a hat.", why: "Slang changes fast, and translation systems trained on older or formal text often miss it." }
+  };
+  var tabs = document.querySelectorAll('#meanings [role="tab"]');
+  function showEx(key) {
+    var e = ex[key];
+    document.getElementById('d-typed').textContent = e.typed;
+    document.getElementById('d-meant').textContent = e.meant;
+    document.getElementById('d-out').textContent = e.out;
+    document.getElementById('d-why').textContent = e.why;
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.dataset.ex === key ? 'true' : 'false'); });
+  }
+  tabs.forEach(function (t) { t.addEventListener('click', function () { showEx(t.dataset.ex); }); });
+  showEx('banco');
+
+  // 2a. Tone demo
+  var toneMeanings = [
+    "Things really are fine.",
+    "I'm definitely not fine, and you should know that.",
+    "I'm not sure I'm okay, but I don't want to talk about it."
+  ];
+  var toneBtns = document.querySelectorAll('#tones .btn');
+  function setTone(i) {
+    document.getElementById('tone-meant').textContent = toneMeanings[i];
+    toneBtns.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.tone == i ? 'true' : 'false'); });
+  }
+  toneBtns.forEach(function (b) { b.addEventListener('click', function () { setTone(b.dataset.tone); }); });
+  setTone(0);
+
+  // 2b. Stress demo
+  var stressMeanings = [
+    "Someone else took your money.",
+    "I'm insisting it didn't happen.",
+    "She may have borrowed it or moved it, but she didn't take it.",
+    "She took someone else's money.",
+    "She took something of yours, just not your money."
+  ];
+  var stressVideos = [
+    "/_blob/8864c20a16d484ff9944559d3b3b2b32", // She (IMG_8946)
+    "/_blob/aa1c58a42ee5465c92f603cca530a423", // didn't (IMG_8947)
+    "/_blob/70013fc6f1d03b06b07d1fee168a7127", // take (IMG_8949)
+    "/_blob/903020ee20572c76a4807ac79a6f1fd3", // your (IMG_8950)
+    "/_blob/a0c61127f63e1325029119b79b680484"  // money (IMG_8951)
+  ];
+  // Embedded copies of the same clips (She, didn't, take, your, money). They are used
+  // automatically when the hosted files can't be reached, e.g. in a downloaded copy of this page.
+  var stressEmbedded = [
+  ];
+  var stressBlobUrls = {};
+  var stressUseEmbedded = false;
+  var stressCurrent = null;
+  function embeddedSrc(i) {
+    if (!stressEmbedded[i]) { return null; }
+    if (!stressBlobUrls[i]) {
+      var bin = atob(stressEmbedded[i]);
+      var bytes = new Uint8Array(bin.length);
+      for (var k = 0; k < bin.length; k++) { bytes[k] = bin.charCodeAt(k); }
+      stressBlobUrls[i] = URL.createObjectURL(new Blob([bytes], { type: 'video/mp4' }));
+    }
+    return stressBlobUrls[i];
+  }
+  function playStress(i) {
+    stressCurrent = i;
+    var src = stressUseEmbedded ? embeddedSrc(i) : stressVideos[i];
+    if (!src) { return; }
+    stressVideo.hidden = false;
+    stressVideo.src = src;
+    stressVideo.load();
+    var p = stressVideo.play();
+    if (p && p.catch) { p.catch(function () {}); }
+  }
+  var stressVideo = document.getElementById('stress-video');
+  stressVideo.addEventListener('error', function () {
+    if (!stressUseEmbedded && stressCurrent !== null) {
+      stressUseEmbedded = true;
+      playStress(stressCurrent);
+    }
+  });
+  var words = document.querySelectorAll('#stress .word');
+  words.forEach(function (w) {
+    w.addEventListener('click', function () {
+      words.forEach(function (x) { x.setAttribute('aria-pressed', x === w ? 'true' : 'false'); });
+      document.getElementById('stress-out').textContent = stressMeanings[w.dataset.i];
+      playStress(w.dataset.i);
+    });
+  });
+
+  // 2c. Gesture demo
+  var head = document.getElementById('head');
+  var gBtns = document.querySelectorAll('#gesture-btns .btn');
+  gBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var g = b.dataset.g;
+      head.classList.remove('nod', 'shake');
+      void head.getBoundingClientRect();
+      head.classList.add(g);
+      document.getElementById('g-us').textContent = g === 'nod' ? 'Yes' : 'No';
+      document.getElementById('g-bg').textContent = g === 'nod' ? 'No' : 'Yes';
+      gBtns.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+    });
+  });
+})();
+</script>
+</body>
+</html>
